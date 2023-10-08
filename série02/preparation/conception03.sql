@@ -1,0 +1,17 @@
+INSERT INTO acteur_film 
+VALUES (1, 1, 'Neo'),
+	(1, 2, 'Trinity'),
+	(1, 3, 'Morpheus'),
+	(1, 4, 'Niobe'),
+	(1, 5, 'Agent Smith'),
+	(1, 6, 'Agent Johnson'),
+	(2, 7, 'Dominic Toretto'),
+	(2, 8, 'Brian O''Conner'),
+	(2, 9, 'Letty Ortiz'),
+	(2, 10, 'Mia Toretto'),
+	(2, 11, 'Matt Shulze'),
+	(3, 1, 'John Wick'),
+	(3, 12, 'Winston'),
+	(3, 13, 'Charon'),
+	(3, 14, 'Aurelio'),
+	(3, 3, 'Bowery King');
