@@ -105,3 +105,67 @@ VALUES (1, 1, 'Neo'),
 	(4, 4, 'Niobe'),
 	(4, 5, 'Agent Smith'),
 	(4, 6, 'Agent Johnson');
+
+-- Q12.a. 
+-- Liste des information des Acteurs en ordre alphabétique
+SELECT * 
+FROM acteur
+ORDER BY act_nom;
+
+-- Q12.b (projection)
+-- Liste des films (titre, annee) en ordre chronologique décroissant
+SELECT film_titre, film_annee
+FROM film
+ORDER BY film_annee DESC;
+
+-- Q12.c. (projection & sélection)
+-- Liste des acteurs (nom, date de naissance) nés dans les années 70
+-- du plus jeune au plus vieux.
+SELECT act_nom, act_dn
+FROM acteur
+WHERE YEAR(act_dn) BETWEEN 1970 AND 1979
+ORDER BY act_dn DESC;
+
+-- Q12.d. (Projection + Jointure)
+-- Liste des films et des personnages interprétés par les acteurs dans ces films
+-- (acteur, titre film, annee, personnage) ordonner par année, puis par titre et 
+-- nom d'acteur.
+SELECT act_nom, film_titre, film_annee, personnage
+FROM acteur AS a, film AS f, acteur_film AS af
+WHERE af.act_id = a.act_id AND af.film_id = f.film_id
+ORDER BY film_annee, film_titre, act_nom;
+
+-- Q13.e. (Projection + Jointure + Sélection)
+-- Déterminer qui est l'acteur qui a interprété "Toretto" dans le film "Fast and Furious"
+-- et quel était son age à la date du film.
+SELECT act_nom, (film_annee - YEAR(act_dn)) AS Age, personnage
+FROM acteur AS a, film AS f, acteur_film AS af
+WHERE af.act_id = a.act_id AND af.film_id = f.film_id AND
+	personnage LIKE '%Toretto%' AND
+	film_titre = 'Fast and Furious';
+
+-- Q13.f. (Projection + Jointure + Sous-requête)
+-- Retrouver l'acteur le plus âgé dans chaque film. Ordonner par l'année du film puis par le nom de l'acteur.
+SELECT act_nom, film_titre, film_annee
+FROM acteur AS a, film AS f, acteur_film AS af
+WHERE af.act_id = a.act_id AND af.film_id = f.film_id AND
+	(f.film_id, act_dn) IN (
+		SELECT film_id, MIN(act_dn)
+		FROM acteur AS a, acteur_film AS af
+		WHERE af.act_id = a.act_id
+		GROUP BY film_id
+	)
+ORDER BY film_annee, act_nom;
+
+-- Q14.g. 
+-- Déterminer le noms de l'acteur qui a interprété le rôle de "Neo" dans le film "Matrix" produit en 1999 ainsi que la liste de tous les films dans lesquels il a joué.
+SELECT act_nom, film_titre, film_annee, personnage
+FROM acteur AS a, film AS f, acteur_film AS af
+WHERE af.act_id = a.act_id AND af.film_id = f.film_id AND
+	a.act_id IN (
+		SELECT act_id
+		FROM acteur_film AS af, film AS f
+		WHERE af.film_id = f.film_id AND
+			film_annee = 1999 AND
+			personnage = 'Neo'
+	);
